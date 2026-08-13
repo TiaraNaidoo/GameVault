@@ -15,6 +15,14 @@ Imports the validation middleware used when creating a game.
 const validateGame = require("../middleware/validateGame");
 
 /*
+Imports the authentication middleware.
+
+This middleware checks whether the user has provided
+a valid JWT before they are allowed to create a game.
+*/
+const authenticateToken = require("../middleware/authenticateToken");
+
+/*
 Creates the game router.
 */
 const router = express.Router();
@@ -37,12 +45,12 @@ router.get("/:id", getGameById);
 /*
 POST /games
 
-The request first passes through validateGame.
-
+The request first passes through authenticateToken.
+If authentication succeeds, the request passes to validateGame.
 If validation succeeds, createGame runs next.
-If validation fails, createGame is not called.
+If authentication fails, validateGame and createGame are not called.
 */
-router.post("/", validateGame, createGame);
+router.post("/", authenticateToken, validateGame, createGame);
 
 /*
 Exports the router.
