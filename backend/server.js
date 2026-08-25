@@ -24,6 +24,8 @@ Imports the private-key and certificate configuration.
 */
 const httpsOptions = require("./config/httpsConfig");
 
+const connectDB = require("./config/database");
+
 /*
 Reads the server configuration from the environment variables.
 
@@ -41,8 +43,13 @@ httpsOptions contains the private key and certificate.
 
 app contains the configured Express application.
 */
-const server = https.createServer(httpsOptions, app);
+const startServer = async () => {
+    try {
+        // waiting until mongo is available before starting this server
+        await connectDB;
 
+         const server = https.createServer(httpsOptions, app);
+ 
 /*
 Starts listening for incoming HTTPS requests.
 */
@@ -65,4 +72,18 @@ server.on("error", error => {
     console.error("The GameVault server could not start.");
     console.error(error.message);
 
-});
+}
+);
+
+} catch(error){
+    // if mongo cant be reached
+    console.error("GameVault should not start.");
+
+    console.error(console.message);
+
+    //end the node.js process to stop the app from creating. 1 = failure status
+    process.exit(1);
+}
+};
+
+startServer();
