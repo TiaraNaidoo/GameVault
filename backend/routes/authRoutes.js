@@ -5,7 +5,7 @@ creates an Express router
 The router allows these routes to be grouped
 together and later mounted under /auth.
 */
-const router = express.Router
+const router = express.Router()
 
 /*
 Imports the authentication controller functions.

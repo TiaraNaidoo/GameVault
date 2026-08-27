@@ -95,7 +95,7 @@ app.use(helmet({
 
             // stop the page from being placed inside a frame on another site
             // = prevents clickjacking attacks 
-            FrameAncestors: ["'none'"],
+            frameAncestors: ["'none'"],
 
             // restrict the base url that could be supplied through an HTML base element
             baseUrl: ["'self'"],

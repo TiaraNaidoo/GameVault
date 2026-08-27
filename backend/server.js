@@ -46,7 +46,7 @@ app contains the configured Express application.
 const startServer = async () => {
     try {
         // waiting until mongo is available before starting this server
-        await connectDB;
+        await connectDB();
 
          const server = https.createServer(httpsOptions, app);
  
@@ -79,7 +79,7 @@ server.on("error", error => {
     // if mongo cant be reached
     console.error("GameVault should not start.");
 
-    console.error(console.message);
+    console.error(error.message);
 
     //end the node.js process to stop the app from creating. 1 = failure status
     process.exit(1);

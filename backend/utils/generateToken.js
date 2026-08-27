@@ -27,7 +27,7 @@ const generateToken = user => {
     clients can view their payload
     */
     const payload = {
-        userId: user.id,
+        userId: user._id.toString(),
         email: user.email,
         role: user.role,
     };
@@ -46,3 +46,5 @@ const generateToken = user => {
         }
     );
 };
+
+module.exports = generateToken;

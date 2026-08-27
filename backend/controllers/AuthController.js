@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 
-const users = require("../data/users");
-
 const generateToken = require("../utils/generateToken");
+
+const User = require("../models/User");
 
 //register a game user
 const register = async (req, res, next) => {
@@ -14,13 +14,10 @@ const register = async (req, res, next) => {
             email,
             password,
             role
-        } = req.validateRegistration;
+        } = req.validatedRegistration;
 
         // check if the email address entered is already used
-        const existingUser = users.find(
-            currentUser => 
-                currentUser.email === email
-        );
+        const existingUser = await User.findOne({email});
 
         // return conflict code = requested account conflicts with exisitng user
 
@@ -46,30 +43,14 @@ password,
 saltRounds
 );
 
-// Create a temp number userID
-const nextId = 
-users.length>0    // I should have more than 0 users in my array
-?Math.max(
-    ...users.map(
-        currentUser =>
-            currentUser.id  // maximum vallue of users
-
-    )
-) +1
-  :1;   // if there is no users, set id to 1
 
   // Create the stored user records
-  const newUser = {
-    id: nextId,
+  const newUser = await User.create({
     name,
     email,
     role,
     passwordHash,
-    createdAt: new Date().toISOString()
-  };
-
-  //push the new user into array in the file users
-  users.push(newUser);   
+  });
 
   // generates a signed token from the JWT utils
   const token = generateToken(newUser);
@@ -89,6 +70,13 @@ users.length>0    // I should have more than 0 users in my array
 
 } catch(error){
 
+    if (error.code === 11000) {
+        return res.status(409).json({
+            success: false,
+            error: "An account with this email is already registered."
+        });
+    }
+
     // sends unexpected errors to the central express handler
     next(error);
 }
@@ -98,13 +86,10 @@ const login = async(req,res,next) => {
     try{
         const{
             email, password
-        }= req.validateLogin;
+        }= req.validatedLogin;
 
         // Use email address to find user
-        const user = users.find(
-            currentUser =>
-                currentUser.email === email
-        );
+        const user = await User.findOne({email}).select("+passwordHash");
 
         // if the email or password is entered incorrectly?
         if(!user) {
@@ -141,7 +126,7 @@ const login = async(req,res,next) => {
             message: "Login success.",
             token,
             user: {
-                id: user.id,
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role
@@ -155,12 +140,11 @@ const login = async(req,res,next) => {
     // return the current authenticated users profile
     // won't work without the auth middleware
     // the middleware must run before the controller so that req.user is available
-    const getProfile = (req, res) => {
+    const getProfile = async (req, res, next) => {
+        try{
 
         // finding the complete user record using the id taken from verified jwt payload
-        const user = users.find(  // finding the users that are authenticated
-            currentUser => currentUser.id === req.user.userId // === is compare
-        );
+        const user = await User.findById(req.user.userId)  // finding the users that are authenticated
 
         // token = be valid even if the temp user dont exist anymore
         if (!user) {
@@ -174,13 +158,17 @@ const login = async(req,res,next) => {
         return res.status(200).json({
             succcess: true,
             user: {
-                id: user.id,
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
                 createdAt: user.createdAt
             }
         });
+
+    }catch(error){
+        next(error);
+    }
             
     };
 
