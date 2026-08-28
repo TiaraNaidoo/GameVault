@@ -6,13 +6,27 @@ Imports the game controller functions.
 const {
     getAllGames,
     getGameById,
-    createGame
+    createGame,
+    replaceGame,
+    updateGame,
+    deleteGame
 } = require("../controllers/gameController");
 
 /*
 Imports the validation middleware used when creating a game.
 */
 const validateGame = require("../middleware/validateGame");
+
+/*
+Imports the reusable MongoDB ObjectId format validator.
+*/
+const validateGameId = require("../middleware/validateGameId");
+
+/*
+Imports the full-update and partial-update validation middleware.
+*/
+const validateFullGame = require("../middleware/validateFullGame");
+const validatePartialGame = require("../middleware/validatePartialGame");
 
 /*
 Imports the authentication middleware.
@@ -38,9 +52,12 @@ router.get("/", getAllGames);
 /*
 GET /games/:id
 
-The value after /games/ will be available through req.params.id.
+validateGameId checks the ID format before the controller runs.
+ 
+Malformed ObjectId -> 400 (from validateGameId)
+Valid ObjectId, no document -> 404 (from getGameById)
 */
-router.get("/:id", getGameById);
+router.get("/:id", validateGameId, getGameById);
 
 /*
 POST /games
@@ -52,6 +69,32 @@ If authentication fails, validateGame and createGame are not called.
 */
 router.post("/", authenticateToken, validateGame, createGame);
 
+/*
+PUT /games/:id
+ 
+Full replace. Every editable field is required by
+validateFullGame.
+ 
+authenticateToken -> validateGameId -> validateFullGame -> replaceGame
+*/
+router.put("/:id", authenticateToken, validateGameId, validateFullGame, replaceGame);
+
+/*
+PATCH /games/:id
+ 
+Partial update. Only supplied fields are validated/applied by
+validatePartialGame.
+ 
+authenticateToken -> validateGameId -> validatePartialGame -> updateGame
+*/
+router.patch("/:id", authenticateToken, validateGameId, validatePartialGame, updateGame);
+
+/*
+DELETE /games/:id
+ 
+authenticateToken -> validateGameId -> deleteGame
+*/
+router.delete("/:id", authenticateToken, validateGameId, deleteGame);
 /*
 Exports the router.
 */

@@ -29,6 +29,15 @@ const authenticateToken = (req,res,next) => {
         });
     }
 
+    /*
+    Reads the same signing secret used by generateToken.js.
+    */
+    const jwtSecret = process.env.JWT_SECRET;
+ 
+    if (!jwtSecret) {
+        throw new Error("JWT secret is not configured.");
+    }
+
     /* verify the token
      check:
      - the signature

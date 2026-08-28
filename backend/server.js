@@ -1,6 +1,10 @@
 /*
 Server.js now has one main responsibility => Start the HTTPS server
+*/
+const dns = require("node:dns");
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
+/*
 Loads environment variables before the other application files
 are imported.
 
