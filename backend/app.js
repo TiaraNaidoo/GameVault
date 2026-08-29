@@ -120,7 +120,7 @@ read the approved frontend origin from the .env
 a fallback is given for demo purposes
 */
 const clientOrigin = process.env.CLIENT_ORIGIN ||
-"https://localhost:5173"
+"http://localhost:5173"
 
 /*
 define the browser origins and request information permitted by the CORS response
