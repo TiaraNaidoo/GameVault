@@ -36,6 +36,8 @@ a valid JWT before they are allowed to create a game.
 */
 const authenticateToken = require("../middleware/authenticateToken");
 
+const authoriseRoles = require("../middleware/authoriseRoles");
+
 /*
 Creates the game router.
 */
@@ -67,7 +69,7 @@ If authentication succeeds, the request passes to validateGame.
 If validation succeeds, createGame runs next.
 If authentication fails, validateGame and createGame are not called.
 */
-router.post("/", authenticateToken, validateGame, createGame);
+router.post("/", authenticateToken, authoriseRoles("admin"), validateGame, createGame);
 
 /*
 PUT /games/:id
@@ -77,7 +79,7 @@ validateFullGame.
  
 authenticateToken -> validateGameId -> validateFullGame -> replaceGame
 */
-router.put("/:id", authenticateToken, validateGameId, validateFullGame, replaceGame);
+router.put("/:id", authenticateToken, authoriseRoles("admin"), validateGameId, validateFullGame, replaceGame);
 
 /*
 PATCH /games/:id
@@ -87,14 +89,13 @@ validatePartialGame.
  
 authenticateToken -> validateGameId -> validatePartialGame -> updateGame
 */
-router.patch("/:id", authenticateToken, validateGameId, validatePartialGame, updateGame);
-
+router.patch("/:id", authenticateToken, authoriseRoles("admin"), validateGameId, validatePartialGame, updateGame);
 /*
 DELETE /games/:id
  
 authenticateToken -> validateGameId -> deleteGame
 */
-router.delete("/:id", authenticateToken, validateGameId, deleteGame);
+router.delete("/:id", authenticateToken, authoriseRoles("admin"), validateGameId, deleteGame);
 /*
 Exports the router.
 */

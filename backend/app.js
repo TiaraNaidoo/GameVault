@@ -20,6 +20,9 @@ responses from the API
 */
 const cors = require("cors");
 
+// import the general apiLimiter
+const {apiLimiter} = require("./middleware/rateLimiters");
+
 /*
 Imports the route files.
 */
@@ -170,6 +173,9 @@ Without this middleware, req.body may be undefined when a
 client sends JSON.
 */
 app.use(express.json());
+
+// adding rateLimiter
+app.use(apiLimiter);
 
 /*
 Registers the system routes.

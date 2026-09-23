@@ -29,7 +29,7 @@ const generateToken = user => {
     const payload = {
         userId: user._id.toString(),
         email: user.email,
-        role: user.role,
+        role: user.role
     };
 //sign and return the jwt
     return jwt.sign(

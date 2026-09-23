@@ -1,5 +1,7 @@
 const express = require("express");
 
+const {authLimiter} = require("../middleware/rateLimiters");
+
 /*
 creates an Express router
 The router allows these routes to be grouped
@@ -63,6 +65,7 @@ Request
 
 router.post(
     "/register",
+    authLimiter,
     validateRegistration,
     register
 );
@@ -81,6 +84,7 @@ Request
 */
 router.post(
     "/login",
+    authLimiter,
     validateLogin,
     login
 );
@@ -88,7 +92,7 @@ router.post(
 /*
 PROFILE ROUTE
 
-POST /auth/profile
+GET /auth/profile
 
 Flow:
 
@@ -102,7 +106,7 @@ getProfile so that req.user has been created
 from the verified JWT.
 */
 
-router.post(
+router.get(
     "/profile",
     authenticateToken,   // So getProfile does not run if the JWT is missing, expired, or invalid.
     getProfile

@@ -1,4 +1,4 @@
-/* Connects backedn and frontend
+/* Connects backend and frontend
 
 why use api.js as a connection point?
 = centralise the location of the backend
@@ -32,7 +32,68 @@ const getHealth = async () =>{
 
 };
 
-export {getHealth};
+const registerUser = async(
+    registrationData
+) => {
+    // send reqs to the backend = communicating with registration endpoint
+
+    const response = await fetch(
+        `${API_BASE_URL}/auth/register`,
+        {
+            //specify the http method
+            method: "POST",
+            // tells the backend that the registration body has json data
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(registrationData)
+        }
+    );
+
+    // converting the backend json res into js object for the frontend
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.error || "Registration failed."
+        );
+    }
+
+    return data;
+};
+
+const loginUser = async (
+    loginData
+) => {
+    const response = await fetch(
+        `${API_BASE_URL}/auth/login`,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(loginData)
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.error || "Login failed."
+        );
+    }
+
+    return data;
+};
+
+export {getHealth,
+    registerUser,
+    loginUser
+};
 
 /*
 req flow/how does getHealth travel?

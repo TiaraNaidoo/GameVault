@@ -16,6 +16,18 @@ import {
     getHealth
 } from "./services/api";
 
+// ./ means "look inside the same folder this file is in."
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+
+/*
+The key used to store the JWT in the browser's localStorage.
+Kept as one constant so the same exact string is used every time
+the token is saved, read, or removed - a typo in any one spot
+would silently break persistence.
+*/
+const TOKEN_STORAGE_KEY = "gamevaultToken";
+
 function App() {
 
     // Receive and store health information
@@ -37,6 +49,31 @@ function App() {
         error,
         setError
     ] = useState("");
+
+    /*
+    Controls which authentication form is currently visible when
+    the user is not logged in. Either "login" or "register".
+    */
+    const [
+        authView,
+        setAuthView
+    ] = useState("login");
+
+    /*
+    Holds the current JWT, or null if the user is not
+    authenticated.
+ 
+    The initial value is read directly from localStorage using a
+    function passed to useState (rather than
+    localStorage.getItem(...) called plainly), so this lookup
+    only happens once, when the component first mounts - not on
+    every re-render.
+    */
+    const [
+        token,
+        setToken
+    ] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
+ 
 
     // runs after the component is displayed
     // at the end there'll be an empty array. why? = to say that the effect should only
@@ -79,6 +116,38 @@ function App() {
         checkBackend();
    // empty array
     }, []);
+
+     /*
+    Called by LoginForm or RegisterForm once the backend has
+    confirmed successful authentication and returned a JWT.
+ 
+    Stores the token in BOTH places:
+    - localStorage -> survives a page refresh
+    - React state  -> updates the interface immediately, since
+      changing localStorage alone does not trigger a re-render
+    */
+    const handleAuthSuccess = (data) => {
+ 
+        if (!data || !data.token) {
+            setError("Authentication succeeded but no token was returned.");
+            return;
+        }
+ 
+        localStorage.setItem(TOKEN_STORAGE_KEY, data.token);
+        setToken(data.token);
+    };
+
+    /*
+    Logs the user out by removing the token from both
+    localStorage and React state, then resets the visible
+    auth form back to login for next time.
+    */
+    const logout = () => {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        setToken(null);
+        setAuthView("login");
+    };
+ 
 
      //jsx will return what the client sees
     return (
@@ -139,7 +208,7 @@ function App() {
                             </strong>
 
                             <p>
-                                Application{" "}
+                                Application:{" "}
                                 {health.application}
                             </p>
 
@@ -161,6 +230,49 @@ function App() {
                         </div>
                     )}
 
+                </section>
+
+                 <section className="auth-card">
+ 
+                    {token ? (
+                        /*
+                        A token exists, so the user is treated as
+                        authenticated. This section does not yet
+                        verify the token is still valid/unexpired
+                        with the backend - that comes in a later
+                        step (calling /auth/profile).
+                        */
+                        <div>
+                            <p>You are logged in.</p>
+                            <button onClick={logout}>
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className="auth-nav">
+                                <button
+                                    className={authView === "login" ? "active" : ""}
+                                    onClick={() => setAuthView("login")}
+                                >
+                                    Login
+                                </button>
+                                <button
+                                    className={authView === "register" ? "active" : ""}
+                                    onClick={() => setAuthView("register")}
+                                >
+                                    Register
+                                </button>
+                            </div>
+ 
+                            {authView === "login" ? (
+                                <LoginForm onAuthSuccess={handleAuthSuccess} />
+                            ) : (
+                                <RegisterForm onAuthSuccess={handleAuthSuccess} />
+                            )}
+                        </div>
+                    )}
+ 
                 </section>
 
             </main>

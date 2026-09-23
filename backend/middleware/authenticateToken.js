@@ -58,6 +58,17 @@ const authenticateToken = (req,res,next) => {
         }
     );
 
+    /*
+    req.user = { add in the role types}
+
+    :
+
+    generateToken
+
+    const - payload = userid, email, role
+
+
+    */
     // add the verifieed id to the req object = protected controllers can now access req.user
     req.user = decodeToken;
 
