@@ -13,12 +13,24 @@ import {
 } from "react";
 
 import {
+    Routes,
+    Route,
+    Navigate
+} from "react-router-dom";
+
+import {
     getHealth
 } from "./services/api";
 
 // ./ means "look inside the same folder this file is in."
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
+import Navigation from "./components/Navigation";
+ 
+import GamesPage from "./pages/GamesPage";
+import GameDetailsPage from "./pages/GameDetailsPage";
+import CollectionPage from "./pages/CollectionPage";
+import ProfilePage from "./pages/ProfilePage";
 
 /*
 The key used to store the JWT in the browser's localStorage.
@@ -149,7 +161,13 @@ function App() {
     };
  
 
-     //jsx will return what the client sees
+    //jsx will return what the client sees
+    /*
+    Not authenticated: show the existing health-check card plus
+    the login/register forms. No routing needed here - this is
+    the "before login" screen.
+    */
+    if (!token) {
     return (
         <div className="app">
 
@@ -281,5 +299,36 @@ function App() {
     );
 }
 
+/*
+    Authenticated: show the main navigation and route between the
+    core feature pages instead of a single screen.
+    */
+    return (
+        <div className="app">
+ 
+            <Navigation onLogout={logout} />
+ 
+            <main className="main-content main-content-wide">
+ 
+                <Routes>
+                    <Route path="/games" element={<GamesPage />} />
+                    <Route path="/games/:id" element={<GameDetailsPage />} />
+                    <Route path="/collection" element={<CollectionPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+ 
+                    {/*
+                    Any unmatched path (including "/" right after
+                    login) redirects to Browse Games, so the user
+                    always lands somewhere useful.
+                    */}
+                    <Route path="*" element={<Navigate to="/games" replace />} />
+                </Routes>
+ 
+            </main>
+ 
+        </div>
+    );
+}
+ 
 // default = exporting function
 export default App;

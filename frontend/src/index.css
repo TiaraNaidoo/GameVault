@@ -181,5 +181,172 @@ Authentication styling
     margin: 0.5rem 0 0;
     font-size: 0.9rem;
 }
+
+/*
+Core feature styling - navigation, game browsing, game details,
+collection and profile pages.
+*/
+ 
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2d6a4f;
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+ 
+.main-nav-brand {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+ 
+.main-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+ 
+.main-nav-links a {
+    color: #d8f3dc;
+    text-decoration: none;
+    font-weight: bold;
+}
+ 
+.main-nav-links a.active {
+    color: #ffffff;
+    text-decoration: underline;
+}
+ 
+.logout-link {
+    background: none;
+    border: 1px solid #d8f3dc;
+    color: #d8f3dc;
+    border-radius: 6px;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+ 
+.main-content-wide {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    text-align: left;
+}
+ 
+.page h2 {
+    color: #1b4332;
+}
+ 
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+ 
+.game-card {
+    background-color: #ffffff;
+    border: 1px solid #b7e4c7;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: left;
+}
+ 
+.game-card h3 {
+    margin: 0 0 0.4rem;
+    color: #1b4332;
+}
+ 
+.game-card-meta {
+    color: #40916c;
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+}
+ 
+.game-available {
+    color: #2d6a4f;
+    font-weight: bold;
+}
+ 
+.game-unavailable {
+    color: #b5651d;
+    font-weight: bold;
+}
+ 
+.view-details-button {
+    display: inline-block;
+    margin-top: 0.75rem;
+    background-color: #2d6a4f;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+ 
+.back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #2d6a4f;
+    font-weight: bold;
+    text-decoration: none;
+}
+ 
+.reviews-section {
+    margin-top: 2rem;
+    border-top: 1px solid #b7e4c7;
+    padding-top: 1rem;
+}
+ 
+.pending-feature-note {
+    background-color: #fff3e0;
+    border: 1px solid #e8a33d;
+    border-radius: 6px;
+    padding: 0.75rem;
+    color: #7a5620;
+    font-size: 0.9rem;
+}
+ 
+.collection-message {
+    margin-top: 0.75rem;
+    color: #2d6a4f;
+    font-weight: bold;
+}
+ 
+.profile-details p {
+    margin: 0.5rem 0;
+    color: #1b4332;
+}
+
+/*
+Review list styling
+*/
+ 
+.review-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+ 
+.review-item {
+    background-color: #ffffff;
+    border: 1px solid #b7e4c7;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+ 
+.review-meta {
+    color: #40916c;
+    font-size: 0.85rem;
+    margin: 0 0 0.3rem;
+}
+ 
+ 
  
  

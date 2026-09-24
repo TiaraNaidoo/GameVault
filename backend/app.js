@@ -29,6 +29,7 @@ Imports the route files.
 const systemRoutes = require("./routes/systemRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const authRoutes = require("./routes/authRoutes");
+const collectionRoutes = require("./routes/collectionRoutes");
 
 /*
 Imports the middleware that handles invalid routes and
@@ -218,6 +219,8 @@ router.get("/:id") becomes GET /games/:id
 router.post("/") becomes POST /games
 */
 app.use("/games", gameRoutes);
+
+app.use("/collection", collectionRoutes);
 
 /*
 Handles requests that do not match a valid route.
