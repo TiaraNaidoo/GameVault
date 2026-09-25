@@ -173,6 +173,78 @@ const getProfile = async () => {
     return data;
 };
  
+/*
+POST /games - admin-protected on the backend
+(authenticateToken -> authoriseRoles("admin")). The JWT is
+required here; the backend rejects this with 401/403 for anyone
+who isn't an authenticated admin, regardless of what the
+frontend does or does not show.
+*/
+const createGame = async (gameData) => {
+ 
+    const response = await fetch(`${API_BASE_URL}/games`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...authHeader()
+        },
+        body: JSON.stringify(gameData)
+    });
+ 
+    const data = await response.json();
+ 
+    if (!response.ok) {
+        throw new Error(data.error || "Could not create game.");
+    }
+ 
+    return data;
+};
+ 
+/*
+PUT /games/:id - admin-protected. Used for edits, since
+GameForm.jsx always collects every editable field regardless of
+whether it's being used to add or edit a game - matching PUT's
+"every field required" rule rather than PATCH's "some fields"
+rule.
+*/
+const updateGame = async (gameId, gameData) => {
+ 
+    const response = await fetch(`${API_BASE_URL}/games/${gameId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            ...authHeader()
+        },
+        body: JSON.stringify(gameData)
+    });
+ 
+    const data = await response.json();
+ 
+    if (!response.ok) {
+        throw new Error(data.error || "Could not update game.");
+    }
+ 
+    return data;
+};
+ 
+/*
+DELETE /games/:id - admin-protected.
+*/
+const deleteGame = async (gameId) => {
+ 
+    const response = await fetch(`${API_BASE_URL}/games/${gameId}`, {
+        method: "DELETE",
+        headers: { ...authHeader() }
+    });
+ 
+    const data = await response.json();
+ 
+    if (!response.ok) {
+        throw new Error(data.error || "Could not delete game.");
+    }
+ 
+    return data;
+};
  
 /*
 GET /collection 
@@ -233,7 +305,7 @@ const addToCollection = async (gameId) => {
 };
  
 /*
-DELETE /collection/:gameId (assumed path - confirm once backend exists)
+DELETE /collection/:gameId 
 */
 const removeFromCollection = async (gameId) => {
  
@@ -259,7 +331,7 @@ const removeFromCollection = async (gameId) => {
 };
  
 /*
-GET /games/:gameId/reviews (assumed path - confirm once backend exists)
+GET /games/:gameId/reviews 
  
 Public - anyone can read reviews for a game, not just the
 reviewer.
@@ -282,7 +354,7 @@ const getReviews = async (gameId) => {
 };
  
 /*
-POST /games/:gameId/reviews (assumed path - confirm once backend exists)
+POST /games/:gameId/reviews 
  
 Protected. Sends only rating and reviewText - the backend
 identifies the reviewer from the JWT and the game from the URL,
@@ -320,6 +392,9 @@ export {getHealth,
     getAllGames,
     getGameById,
     getProfile,
+    createGame,
+    updateGame,
+    deleteGame,
     getCollection,
     addToCollection,
     removeFromCollection,

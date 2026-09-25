@@ -346,6 +346,93 @@ Review list styling
     font-size: 0.85rem;
     margin: 0 0 0.3rem;
 }
+
+/*
+Admin dashboard styling.
+*/
+ 
+.admin-game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+ 
+.admin-game-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: #ffffff;
+    border: 1px solid #b7e4c7;
+    border-radius: 8px;
+    padding: 1rem;
+}
+ 
+.admin-game-info h4 {
+    margin: 0 0 0.25rem;
+    color: #1b4332;
+}
+ 
+.admin-game-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+ 
+.admin-game-actions button {
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #2d6a4f;
+    background-color: #ffffff;
+    color: #2d6a4f;
+    font-weight: bold;
+    cursor: pointer;
+}
+ 
+.danger-button {
+    border-color: #b5651d !important;
+    color: #b5651d !important;
+}
+ 
+.admin-game-form {
+    background-color: #ffffff;
+    border: 1px solid #b7e4c7;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    max-width: 420px;
+}
+ 
+.admin-game-form h3 {
+    margin-top: 0;
+    color: #1b4332;
+}
+ 
+.checkbox-label {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem !important;
+}
+ 
+.checkbox-label input {
+    width: auto;
+}
+ 
+.admin-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+ 
+.secondary-button {
+    background-color: #ffffff !important;
+    color: #2d6a4f !important;
+    border: 1px solid #2d6a4f !important;
+}
+ 
  
  
  
